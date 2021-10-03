@@ -111,11 +111,11 @@
 
 (defface boxy-headlines-default nil
   "Default face used in boxy mode."
-  :group 'boxy)
+  :group 'boxy-headlines)
 
 (defface boxy-headlines-primary nil
   "Face for highlighting the name of a box."
-  :group 'boxy)
+  :group 'boxy-headlines)
 
 (face-spec-set
  'boxy-headlines-primary
@@ -125,7 +125,7 @@
 
 (defface boxy-headlines-selected nil
   "Face for the current box border under cursor."
-  :group 'boxy)
+  :group 'boxy-headlines)
 
 (face-spec-set
  'boxy-headlines-selected
@@ -134,7 +134,7 @@
 
 (defface boxy-headlines-rel nil
   "Face for the box which is related to the box under the cursor."
-  :group 'boxy)
+  :group 'boxy-headlines)
 
 (face-spec-set
  'boxy-headlines-rel
@@ -143,7 +143,7 @@
 
 (defface boxy-headlines-tooltip nil
   "Face for tooltips in a boxy diagram."
-  :group 'boxy)
+  :group 'boxy-headlines)
 
 (face-spec-set
  'boxy-headlines-tooltip
