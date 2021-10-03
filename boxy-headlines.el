@@ -87,7 +87,7 @@
   :type 'number
   :group 'boxy-headlines)
 
-(defcustom boxy-headlines-default-visibility 2
+(defcustom boxy-headlines-default-visibility 1
   "Default level to display boxes."
   :type 'number
   :group 'boxy-headlines)
@@ -157,7 +157,7 @@
                        &key
                        (display-buffer-fn 'display-buffer-pop-up-window)
                        (visibility boxy-headlines-default-visibility)
-                       (max-visibility 3)
+                       (max-visibility 2)
                        select
                        header
                        (default-margin-x boxy-headlines-margin-x)
@@ -238,9 +238,7 @@ diagram."
         match)
     (boxy-headlines-pp world
              :display-buffer-fn 'display-buffer-same-window
-             :select t
-             :visibility 1
-             :max-visibility 2)
+             :select t)
     (while (and path (or (not match) (not (boxy-is-visible match t))))
       (setq match (boxy-find-matching (boxy-box :name (pop path)) world)))
     (when match
