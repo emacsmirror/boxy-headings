@@ -305,13 +305,13 @@ diagram."
                                 `(lambda (box)
                                    (mapc
                                     (lambda (h) (org-real--add-headline h box))
-                                    ',(alist-get 'children partitioned)))))
+                                    ',children))))
         (if siblings
             (object-add-to-list box :expand-siblings
                                 `(lambda (box)
                                    (mapc
                                     (lambda (h) (org-real--add-headline h box))
-                                    ',(alist-get 'siblings partitioned)))))))))
+                                    ',children))))))))
 
 ;;;; Utility expressions
 
