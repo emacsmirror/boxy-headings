@@ -304,13 +304,13 @@ diagram."
             (object-add-to-list box :expand-children
                                 `(lambda (box)
                                    (mapc
-                                    (lambda (h) (org-real--add-headline h box))
+                                    (lambda (h) (boxy-headlines--add-headline h box))
                                     ',children))))
         (if siblings
             (object-add-to-list box :expand-siblings
                                 `(lambda (box)
                                    (mapc
-                                    (lambda (h) (org-real--add-headline h box))
+                                    (lambda (h) (boxy-headlines--add-headline h box))
                                     ',children))))))))
 
 ;;;; Utility expressions
