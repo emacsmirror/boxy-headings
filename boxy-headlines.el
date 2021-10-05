@@ -102,39 +102,23 @@
 (defface boxy-headlines-default nil
   "Default face used in boxy mode.")
 
-(defface boxy-headlines-primary nil
+(defface boxy-headlines-primary
+  '((((background dark)) (:foreground "turquoise"))
+    (t (:foreground "dark cyan")))
   "Face for highlighting the name of a box.")
 
-(face-spec-set
- 'boxy-headlines-primary
- '((((background dark)) (:foreground "turquoise"))
-   (t (:foreground "dark cyan")))
- 'face-defface-spec)
-
-(defface boxy-headlines-selected nil
+(defface boxy-headlines-selected
+  '((t :foreground "light slate blue"))
   "Face for the current box border under cursor.")
 
-(face-spec-set
- 'boxy-headlines-selected
- '((t :foreground "light slate blue"))
- 'face-defface-spec)
-
-(defface boxy-headlines-rel nil
+(defface boxy-headlines-rel
+  '((t :foreground "hot pink"))
   "Face for the box which is related to the box under the cursor.")
 
-(face-spec-set
- 'boxy-headlines-rel
- '((t :foreground "hot pink"))
- 'face-defface-spec)
-
-(defface boxy-headlines-tooltip nil
+(defface boxy-headlines-tooltip
+  '((((background dark)) (:background "gray30" :foreground "gray"))
+    (t (:background "gainsboro" :foreground "dim gray")))
   "Face for tooltips in a boxy diagram.")
-
-(face-spec-set
- 'boxy-headlines-tooltip
- '((((background dark)) (:background "gray30" :foreground "gray"))
-   (t (:background "gainsboro" :foreground "dim gray")))
- 'face-defface-spec)
 
 ;;;; Pretty printing
 
