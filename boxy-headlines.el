@@ -233,8 +233,7 @@ diagram."
 
 ;;;; Boxy implementation
 
-(cl-defmethod boxy-headlines--add-headline (headline
-                                            (parent boxy-box))
+(defun boxy-headlines--add-headline (headline parent)
   "Add HEADLINE to world as a child of PARENT."
   (with-slots (markers (parent-level level)) parent
     (with-current-buffer (marker-buffer (car markers))
