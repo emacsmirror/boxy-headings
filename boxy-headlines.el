@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
 ;; Author: Tyler Grinn <tylergrinn@gmail.com>
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; File: boxy-headlines.el
 ;; Package-Requires: ((emacs "26.1") (boxy "1.0"))
 ;; Keywords: tools
@@ -59,63 +59,51 @@
 
 (defcustom boxy-headlines-margin-x 2
   "Horizontal margin to be used when displaying boxes."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-margin-y 1
   "Vertical margin to be used when displaying boxes."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-padding-x 2
   "Horizontal padding to be used when displaying boxes."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-padding-y 1
   "Vertical padding to be used when displaying boxes."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-include-context t
   "Whether to show context when opening a real link."
-  :type 'boolean
-  :group 'boxy-headlines)
+  :type 'boolean)
 
 (defcustom boxy-headlines-flex-width 80
   "When merging links, try to keep width below this."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-default-visibility 1
   "Default level to display boxes."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-tooltips t
   "Show tooltips in a boxy diagram."
-  :type 'boolean
-  :group 'boxy-headlines)
+  :type 'boolean)
 
 (defcustom boxy-headlines-tooltip-timeout 0.5
   "Idle time before showing tooltip in a boxy diagram."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 (defcustom boxy-headlines-tooltip-max-width 30
   "Maximum width of all tooltips."
-  :type 'number
-  :group 'boxy-headlines)
+  :type 'number)
 
 ;;;; Faces
 
 (defface boxy-headlines-default nil
-  "Default face used in boxy mode."
-  :group 'boxy-headlines)
+  "Default face used in boxy mode.")
 
 (defface boxy-headlines-primary nil
-  "Face for highlighting the name of a box."
-  :group 'boxy-headlines)
+  "Face for highlighting the name of a box.")
 
 (face-spec-set
  'boxy-headlines-primary
@@ -124,8 +112,7 @@
  'face-defface-spec)
 
 (defface boxy-headlines-selected nil
-  "Face for the current box border under cursor."
-  :group 'boxy-headlines)
+  "Face for the current box border under cursor.")
 
 (face-spec-set
  'boxy-headlines-selected
@@ -133,8 +120,7 @@
  'face-defface-spec)
 
 (defface boxy-headlines-rel nil
-  "Face for the box which is related to the box under the cursor."
-  :group 'boxy-headlines)
+  "Face for the box which is related to the box under the cursor.")
 
 (face-spec-set
  'boxy-headlines-rel
@@ -142,8 +128,7 @@
  'face-defface-spec)
 
 (defface boxy-headlines-tooltip nil
-  "Face for tooltips in a boxy diagram."
-  :group 'boxy-headlines)
+  "Face for tooltips in a boxy diagram.")
 
 (face-spec-set
  'boxy-headlines-tooltip
@@ -227,11 +212,12 @@ diagram."
 
 ;;;; Commands
 
+;;;###autoload
 (defun boxy-headlines ()
   "View all org headlines as a boxy diagram."
   (interactive)
   (let ((path (seq-filter
-               'identity
+               #'identity
                (append (list (org-entry-get nil "ITEM"))
                        (reverse (org-get-outline-path)))))
         (world (save-excursion (boxy-headlines--parse-headlines)))
@@ -247,8 +233,7 @@ diagram."
 
 ;;;; Boxy implementation
 
-(cl-defmethod boxy-headlines--add-headline (headline
-                                            (parent boxy-box))
+(defun boxy-headlines--add-headline (headline parent)
   "Add HEADLINE to world as a child of PARENT."
   (with-slots (markers (parent-level level)) parent
     (with-current-buffer (marker-buffer (car markers))
@@ -266,7 +251,7 @@ diagram."
              (siblings (alist-get 'siblings partitioned))
              (pos (org-element-property :begin headline))
              (columns (save-excursion (goto-char pos) (org-columns--collect-values)))
-             (max-column-length (apply 'max 0
+             (max-column-length (apply #'max 0
                                        (mapcar
                                         (lambda (column)
                                           (length (cadr (car column))))
