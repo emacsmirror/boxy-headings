@@ -1,13 +1,13 @@
-;;; boxy-headlines.el --- View org files in a boxy diagram -*- lexical-binding: t -*-
+;;; boxy-headings.el --- View org files in a boxy diagram -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
 ;; Author: Tyler Grinn <tylergrinn@gmail.com>
-;; Version: 1.0.2
-;; File: boxy-headlines.el
+;; Version: 2.0.0
+;; File: boxy-headings.el
 ;; Package-Requires: ((emacs "26.1") (boxy "1.0"))
 ;; Keywords: tools
-;; URL: https://gitlab.com/tygrdev/boxy-headlines
+;; URL: https://gitlab.com/tygrdev/boxy-headings
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@
 
 ;;; Commentary:
 
-;; The command `boxy-headlines' will display all headlines in the
+;; The command `boxy-headings' will display all headings in the
 ;; current org file as a boxy diagram.  The relationship between
-;; a headline and its parent can be set by using a REL property on the
-;; child headline.  Valid values for REL are:
+;; a heading and its parent can be set by using a REL property on the
+;; child heading.  Valid values for REL are:
 ;;
 ;;   - on top of
 ;;   - in front of
@@ -37,7 +37,7 @@
 ;;   - to the right of
 ;;   - to the left of
 ;;
-;;   The tooltip in `boxy-headlines' shows the values for each row
+;;   The tooltip in `boxy-headings' shows the values for each row
 ;;   in `org-columns' and can be customized the same way as org
 ;;   columns view.
 
@@ -53,111 +53,95 @@
 
 ;;;; Options
 
-(defgroup boxy-headlines nil
-  "Customization options for boxy-headlines"
+(defgroup boxy-headings nil
+  "Customization options for boxy-headings"
   :group 'applications)
 
-(defcustom boxy-headlines-margin-x 2
+(defcustom boxy-headings-margin-x 2
   "Horizontal margin to be used when displaying boxes."
   :type 'number)
 
-(defcustom boxy-headlines-margin-y 1
+(defcustom boxy-headings-margin-y 1
   "Vertical margin to be used when displaying boxes."
   :type 'number)
 
-(defcustom boxy-headlines-padding-x 2
+(defcustom boxy-headings-padding-x 2
   "Horizontal padding to be used when displaying boxes."
   :type 'number)
 
-(defcustom boxy-headlines-padding-y 1
+(defcustom boxy-headings-padding-y 1
   "Vertical padding to be used when displaying boxes."
   :type 'number)
 
-(defcustom boxy-headlines-include-context t
+(defcustom boxy-headings-include-context t
   "Whether to show context when opening a real link."
   :type 'boolean)
 
-(defcustom boxy-headlines-flex-width 80
+(defcustom boxy-headings-flex-width 80
   "When merging links, try to keep width below this."
   :type 'number)
 
-(defcustom boxy-headlines-default-visibility 1
+(defcustom boxy-headings-default-visibility 1
   "Default level to display boxes."
   :type 'number)
 
-(defcustom boxy-headlines-tooltips t
+(defcustom boxy-headings-tooltips t
   "Show tooltips in a boxy diagram."
   :type 'boolean)
 
-(defcustom boxy-headlines-tooltip-timeout 0.5
+(defcustom boxy-headings-tooltip-timeout 0.5
   "Idle time before showing tooltip in a boxy diagram."
   :type 'number)
 
-(defcustom boxy-headlines-tooltip-max-width 30
+(defcustom boxy-headings-tooltip-max-width 30
   "Maximum width of all tooltips."
   :type 'number)
 
 ;;;; Faces
 
-(defface boxy-headlines-default nil
+(defface boxy-headings-default nil
   "Default face used in boxy mode.")
 
-(defface boxy-headlines-primary nil
+(defface boxy-headings-primary
+  '((((background dark)) (:foreground "turquoise"))
+    (t (:foreground "dark cyan")))
   "Face for highlighting the name of a box.")
 
-(face-spec-set
- 'boxy-headlines-primary
- '((((background dark)) (:foreground "turquoise"))
-   (t (:foreground "dark cyan")))
- 'face-defface-spec)
-
-(defface boxy-headlines-selected nil
+(defface boxy-headings-selected
+  '((t :foreground "light slate blue"))
   "Face for the current box border under cursor.")
 
-(face-spec-set
- 'boxy-headlines-selected
- '((t :foreground "light slate blue"))
- 'face-defface-spec)
-
-(defface boxy-headlines-rel nil
+(defface boxy-headings-rel
+  '((t :foreground "hot pink"))
   "Face for the box which is related to the box under the cursor.")
 
-(face-spec-set
- 'boxy-headlines-rel
- '((t :foreground "hot pink"))
- 'face-defface-spec)
-
-(defface boxy-headlines-tooltip nil
+(defface boxy-headings-tooltip
+  '((((background dark)) (:background "gray30" :foreground "gray"))
+    (t (:background "gainsboro" :foreground "dim gray")))
   "Face for tooltips in a boxy diagram.")
-
-(face-spec-set
- 'boxy-headlines-tooltip
- '((((background dark)) (:background "gray30" :foreground "gray"))
-   (t (:background "gainsboro" :foreground "dim gray")))
- 'face-defface-spec)
 
 ;;;; Pretty printing
 
-(cl-defun boxy-headlines-pp (box
+(cl-defun boxy-headings-pp (box
                        &key
                        (display-buffer-fn 'display-buffer-pop-up-window)
-                       (visibility boxy-headlines-default-visibility)
+                       (visibility boxy-headings-default-visibility)
                        (max-visibility 2)
                        select
                        header
-                       (default-margin-x boxy-headlines-margin-x)
-                       (default-margin-y boxy-headlines-margin-y)
-                       (default-padding-x boxy-headlines-padding-x)
-                       (default-padding-y boxy-headlines-padding-y)
-                       (flex-width boxy-headlines-flex-width)
-                       (tooltips boxy-headlines-tooltips)
-                       (tooltip-timeout boxy-headlines-tooltip-timeout)
-                       (tooltip-max-width boxy-headlines-tooltip-max-width)
-                       (default-face 'boxy-headlines-default)
-                       (primary-face 'boxy-headlines-primary)
-                       (tooltip-face 'boxy-headlines-tooltip)
-                       (rel-face 'boxy-headlines-rel)
-                       (selected-face 'boxy-headlines-selected))
+                       (default-margin-x boxy-headings-margin-x)
+                       (default-margin-y boxy-headings-margin-y)
+                       (default-padding-x boxy-headings-padding-x)
+                       (default-padding-y boxy-headings-padding-y)
+                       (flex-width boxy-headings-flex-width)
+                       (tooltips boxy-headings-tooltips)
+                       (tooltip-timeout boxy-headings-tooltip-timeout)
+                       (tooltip-max-width boxy-headings-tooltip-max-width)
+                       (default-face 'boxy-headings-default)
+                       (primary-face 'boxy-headings-primary)
+                       (tooltip-face 'boxy-headings-tooltip)
+                       (rel-face 'boxy-headings-rel)
+                       (selected-face 'boxy-headings-selected))
   "Pretty print BOX in a popup buffer.
 
 If HEADER is passed in, it will be printed above the diagram.
@@ -213,16 +197,16 @@ diagram."
 ;;;; Commands
 
 ;;;###autoload
-(defun boxy-headlines ()
-  "View all org headlines as a boxy diagram."
+(defun boxy-headings ()
+  "View all org headings as a boxy diagram."
   (interactive)
   (let ((path (seq-filter
                #'identity
                (append (list (org-entry-get nil "ITEM"))
                        (reverse (org-get-outline-path)))))
-        (world (save-excursion (boxy-headlines--parse-headlines)))
+        (world (save-excursion (boxy-headings--parse-headings)))
         match)
-    (boxy-headlines-pp world
+    (boxy-headings-pp world
              :display-buffer-fn 'display-buffer-same-window
              :select t)
     (while (and path (or (not match) (not (boxy-is-visible match t))))
@@ -233,8 +217,8 @@ diagram."
 
 ;;;; Boxy implementation
 
-(defun boxy-headlines--add-headline (headline parent)
-  "Add HEADLINE to world as a child of PARENT."
+(defun boxy-headings--add-heading (heading parent)
+  "Add HEADING to world as a child of PARENT."
   (with-slots (markers (parent-level level)) parent
     (with-current-buffer (marker-buffer (car markers))
       (let* ((partitioned (seq-group-by
@@ -246,10 +230,10 @@ diagram."
                                (if (member child-rel boxy-children-relationships)
                                    'children
                                  'siblings)))
-                           (cddr headline)))
+                           (cddr heading)))
              (children (alist-get 'children partitioned))
              (siblings (alist-get 'siblings partitioned))
-             (pos (org-element-property :begin headline))
+             (pos (org-element-property :begin heading))
              (columns (save-excursion (goto-char pos) (org-columns--collect-values)))
              (max-column-length (apply #'max 0
                                        (mapcar
@@ -260,7 +244,7 @@ diagram."
              (level (if (member rel boxy-children-relationships)
                         (+ 1 parent-level)
                       parent-level))
-             (name (org-element-property :title headline))
+             (name (org-element-property :title heading))
              (box (boxy-box :name (if (string-match org-link-bracket-re name)
                                       (match-string 2 name)
                                     name)
@@ -289,21 +273,21 @@ diagram."
             (object-add-to-list box :expand-children
                                 `(lambda (box)
                                    (mapc
-                                    (lambda (h) (boxy-headlines--add-headline h box))
+                                    (lambda (h) (boxy-headings--add-heading h box))
                                     ',children))))
         (if siblings
             (object-add-to-list box :expand-siblings
                                 `(lambda (box)
                                    (mapc
-                                    (lambda (h) (boxy-headlines--add-headline h box))
+                                    (lambda (h) (boxy-headings--add-heading h box))
                                     ',children))))))))
 
 ;;;; Utility expressions
 
-(defun boxy-headlines--parse-headlines ()
-  "Create a `boxy-box' from the current buffer's headlines."
+(defun boxy-headings--parse-headings ()
+  "Create a `boxy-box' from the current buffer's headings."
   (org-columns-get-format)
-  (let* ((headlines (cddr (org-element-parse-buffer 'headline)))
+  (let* ((headings (cddr (org-element-parse-buffer 'headline)))
          (filename (buffer-name))
          (title (or (concat (file-name-base filename) "." (file-name-extension filename))
                     "Document"))
@@ -313,11 +297,11 @@ diagram."
                              :markers (list (point-min-marker)))))
     (boxy-add-next document world)
     (mapc
-     (lambda (headline)
-        (boxy-headlines--add-headline headline document))
-     headlines)
+     (lambda (heading)
+        (boxy-headings--add-heading heading document))
+     headings)
     world))
 
-(provide 'boxy-headlines)
+(provide 'boxy-headings)
 
-;;; boxy-headlines.el ends here
+;;; boxy-headings.el ends here
