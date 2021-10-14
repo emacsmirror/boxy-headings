@@ -85,6 +85,10 @@
   "Default level to display boxes."
   :type 'number)
 
+(defcustom boxy-headings-max-visibility 2
+  "Maximum visibility to show when cycling global visibility."
+  :type 'number)
+
 (defcustom boxy-headings-tooltips t
   "Show tooltips in a boxy diagram."
   :type 'boolean)
@@ -126,7 +130,7 @@
                        &key
                        (display-buffer-fn 'display-buffer-pop-up-window)
                        (visibility boxy-headings-default-visibility)
-                       (max-visibility 2)
+                       (max-visibility boxy-headings-max-visibility)
                        select
                        header
                        (default-margin-x boxy-headings-margin-x)
