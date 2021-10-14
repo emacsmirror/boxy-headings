@@ -29,13 +29,13 @@
 ;; a heading and its parent can be set by using a REL property on the
 ;; child heading.  Valid values for REL are:
 ;;
-;;   - on top of
-;;   - in front of
+;;   - on-top
+;;   - in-front
 ;;   - behind
 ;;   - above
 ;;   - below
-;;   - to the right of
-;;   - to the left of
+;;   - right
+;;   - left
 ;;
 ;;   The tooltip in `boxy-headings' shows the values for each row
 ;;   in `org-columns' and can be customized the same way as org
@@ -54,7 +54,7 @@
 ;;;; Options
 
 (defgroup boxy-headings nil
-  "Customization options for boxy-headings"
+  "Customization options for boxy-headings."
   :group 'applications)
 
 (defcustom boxy-headings-margin-x 2
@@ -223,13 +223,11 @@ diagram."
     (with-current-buffer (marker-buffer (car markers))
       (let* ((partitioned (seq-group-by
                            (lambda (h)
-                             (let ((child-rel (or (org-entry-get
-                                                   (org-element-property :begin h)
-                                                   "REL")
-                                                  "in")))
-                               (if (member child-rel boxy-children-relationships)
-                                   'children
-                                 'siblings)))
+                             (if (member (boxy-headings--get-rel
+                                          (org-element-property :begin h))
+                                         boxy-children-relationships)
+                                 'children
+                               'siblings))
                            (cddr heading)))
              (children (alist-get 'children partitioned))
              (siblings (alist-get 'siblings partitioned))
@@ -240,7 +238,7 @@ diagram."
                                         (lambda (column)
                                           (length (cadr (car column))))
                                         columns)))
-             (rel (save-excursion (goto-char pos) (or (org-entry-get nil "REL") "in")))
+             (rel (boxy-headings--get-rel pos))
              (level (if (member rel boxy-children-relationships)
                         (+ 1 parent-level)
                       parent-level))
@@ -301,6 +299,33 @@ diagram."
         (boxy-headings--add-heading heading document))
      headings)
     world))
+
+(defun boxy-headings--get-rel (&optional pos)
+  "Get the boxy relationship from an org heading at POS.
+
+POS can be nil to use the heading at point.
+
+The default relationship is 'in'."
+  (let ((rel (org-entry-get pos "REL")))
+    (cond
+     ((not rel)
+      "in")
+     ((string-match-p "on.+top" rel)
+      "on top of")
+     ((string-match-p "in.+front" rel)
+      "in front of")
+     ((string-match-p "behind" rel)
+      "behind")
+     ((string-match-p "above" rel)
+      "above")
+     ((string-match-p "below" rel)
+      "below")
+     ((string-match-p "left" rel)
+      "to the left of")
+     ((string-match-p "right" rel)
+      "to the right of")
+     (t
+      "in"))))
 
 (provide 'boxy-headings)
 
