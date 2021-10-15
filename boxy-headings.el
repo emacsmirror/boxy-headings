@@ -124,6 +124,20 @@
     (t (:background "gainsboro" :foreground "dim gray")))
   "Face for tooltips in a boxy diagram.")
 
+;;;; Variables
+
+(defvar boxy-headings-rel-alist
+  '(("on top of"       . ("on.+top"))
+    ("in front of"     . ("in.+front"))
+    ("behind"          . ("behind"))
+    ("below"           . ("below"))
+    ("to the left of"  . ("to the left of"))
+    ("to the right of" . ("to the right of")))
+  "Mapping from a boxy relationship to a list of regexes.
+
+Each regex will be tested against the REL property of each
+heading.")
+
 ;;;; Pretty printing
 
 (cl-defun boxy-headings-pp (box
@@ -310,26 +324,19 @@ diagram."
 POS can be nil to use the heading at point.
 
 The default relationship is 'in'."
-  (let ((rel (org-entry-get pos "REL")))
-    (cond
-     ((not rel)
-      "in")
-     ((string-match-p "on.+top" rel)
-      "on top of")
-     ((string-match-p "in.+front" rel)
-      "in front of")
-     ((string-match-p "behind" rel)
-      "behind")
-     ((string-match-p "above" rel)
-      "above")
-     ((string-match-p "below" rel)
-      "below")
-     ((string-match-p "left" rel)
-      "to the left of")
-     ((string-match-p "right" rel)
-      "to the right of")
-     (t
-      "in"))))
+  (let ((heading-rel (org-entry-get pos "REL")))
+    (if (not heading-rel)
+        "in"
+      (seq-find
+       (lambda (rel)
+         (seq-some
+          (lambda (pattern)
+            (message "Testing pattern %s" pattern)
+            (string-match-p pattern heading-rel))
+          (alist-get rel boxy-headings-rel-alist
+                     nil nil #'equal)))
+       boxy-relationships
+       "in"))))
 
 (provide 'boxy-headings)
 
