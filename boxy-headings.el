@@ -131,8 +131,8 @@
     ("in front of"     . ("in.+front"))
     ("behind"          . ("behind"))
     ("below"           . ("below"))
-    ("to the left of"  . ("to the left of"))
-    ("to the right of" . ("to the right of")))
+    ("to the left of"  . ("left"))
+    ("to the right of" . ("right")))
   "Mapping from a boxy relationship to a list of regexes.
 
 Each regex will be tested against the REL property of each
@@ -331,7 +331,6 @@ The default relationship is 'in'."
        (lambda (rel)
          (seq-some
           (lambda (pattern)
-            (message "Testing pattern %s" pattern)
             (string-match-p pattern heading-rel))
           (alist-get rel boxy-headings-rel-alist
                      nil nil #'equal)))
