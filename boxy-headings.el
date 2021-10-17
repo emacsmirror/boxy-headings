@@ -296,7 +296,7 @@ diagram."
                                 `(lambda (box)
                                    (mapc
                                     (lambda (h) (boxy-headings--add-heading h box))
-                                    ',children))))))))
+                                    ',siblings))))))))
 
 ;;;; Utility expressions
 
