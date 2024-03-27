@@ -1,6 +1,4 @@
-#+TITLE: Boxy Headings (ARCHIVE)
-
-*This project has moved [[https://gitlab.com/grinn.amy/boxy-headings][here]]*
+#+TITLE: Boxy Headings
 
 View org files as a boxy diagram.
 
