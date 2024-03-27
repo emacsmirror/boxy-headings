@@ -7,7 +7,7 @@
 ;; File: boxy-headings.el
 ;; Package-Requires: ((emacs "26.1") (boxy "1.1") (org "9.4"))
 ;; Keywords: tools
-;; URL: https://gitlab.com/tygrdev/boxy-headings
+;; URL: https://gitlab.com/grinn.amy/boxy-headings
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
