@@ -4,6 +4,7 @@
 
 (eldev-use-plugin 'autoloads)
 
+(defun package--get-description (pkg) (signal 'file-missing nil))
 
 (eldev-defcommand
  boxy_headings-test (&rest _)
