@@ -4,15 +4,14 @@ stages:
 
 package:
   stage: build
-  image: silex/emacs:27
+  image: silex/emacs:29
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   before_script:
     - curl -fsSL https://raw.github.com/doublep/eldev/master/webinstall/eldev | sh
     - export PATH=$PATH:/root/.local/bin
   script:
-    - eldev lint doc
-    - eldev lint re
+    - eldev lint doc re
     # TODO package-lint erroneously says emacs 26 doesn't support org-collect-keywords
     # - eldev lint package
     - eldev compile -W
