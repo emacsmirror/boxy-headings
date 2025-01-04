@@ -1,6 +1,6 @@
 ;;; boxy-headings.el --- View org files in a boxy diagram -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2024 Free Software Foundation, Inc.
+;; Copyright (C) 2021-2025 Free Software Foundation, Inc.
 
 ;; Author: Amy Grinn <grinn.amy@gmail.com>
 ;; Version: 2.1.7
