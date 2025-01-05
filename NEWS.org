@@ -1,5 +1,9 @@
 #+title: NEWS
 
+* 2.1.9
+
+- Updated NEWS file
+
 * 2.1.8
 
 - Remove eieio dependency
